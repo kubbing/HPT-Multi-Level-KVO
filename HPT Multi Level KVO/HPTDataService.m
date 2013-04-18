@@ -28,8 +28,28 @@
                        @"Acer Wildfire Vivid II",
                        @"LG Aria Epic Plus V One",
                        @"HTC Dream Vibrant II Prime Pro",
-                       @"HTC Defy Touch One Z S"
+                       @"HTC Defy Touch One Z S",
+                       @"LG Infuse Vivid",
+                       @"Samsung Xperia Incredible II 3D",
+                       @"Motorola Thunderbolt Slide Pro E",
+                       @"Sony Ericsson Atrix Vibrant Prime Pro",
+                       @"LG Dream Optimus G1 Prime II",
+                       @"LG Bionic Plus V XT",
+                       @"Samsung Mesmerize Epic 3D",
+                       @"Acer Legend Vibrant II E",
+                       @"HTC Legend Vibrant G1 S E",
+                       @"Sony Ericsson Galaxy Incredible V"
                        ];
+    
+    return array;
+}
+
+- (NSArray *)randomPhoneArray
+{
+    NSMutableArray *array = [[self phoneArray] mutableCopy];
+    for (NSUInteger i = array.count - 1; i > 0; i--) {
+        [array exchangeObjectAtIndex:i withObjectAtIndex:(random() % array.count)];
+    }
     
     return array;
 }
@@ -58,12 +78,7 @@
 {
     TRC_ENTRY;
     
-    NSMutableArray *array = [[self phoneArray] mutableCopy];
-    for (NSUInteger i = array.count - 1; i > 0; i--) {
-        [array exchangeObjectAtIndex:i withObjectAtIndex:(random() % array.count)];
-    }
-    
-    self.dataArray = array;
+    self.dataArray = [[self randomPhoneArray] mutableCopy];
 }
 
 @end
