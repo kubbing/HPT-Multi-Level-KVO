@@ -7,8 +7,12 @@
 //
 
 #import "HPTTableViewController.h"
+#import "HPTDataService.h"
+#import "HPTCell.h"
 
 @interface HPTTableViewController ()
+
+@property (nonatomic, strong) NSArray *dataArray;
 
 @end
 
@@ -23,11 +27,25 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [[HPTDataService sharedService] removeObserver:self forKeyPath:@"dataArray"];
+    
+    TRC_EXIT;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
     self.title = @"KVO Demo";
+    [self.tableView registerClass:[HPTCell class] forCellReuseIdentifier:@"Cell"];
+    
+    self.dataArray = [HPTDataService sharedService].dataArray;
+    
+    [[HPTDataService sharedService] addObserver:self
+                                     forKeyPath:@"dataArray"
+                                        options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,20 +54,28 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"dataArray"]) {
+        self.dataArray = change[NSKeyValueChangeNewKey];
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return self.dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -57,7 +83,8 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    // Configure the cell...
+    cell.textLabel.text = [NSString stringWithFormat:@"%d:%d", indexPath.section, indexPath.row];
+    cell.detailTextLabel.text = self.dataArray[indexPath.row];
     
     return cell;
 }

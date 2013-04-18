@@ -17,6 +17,8 @@
 		17BEB87E172046CC008C4B45 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BEB87D172046CC008C4B45 /* Default@2x.png */; };
 		17BEB880172046CC008C4B45 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BEB87F172046CC008C4B45 /* Default-568h@2x.png */; };
 		17BEB88817204761008C4B45 /* HPTTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17BEB88717204761008C4B45 /* HPTTableViewController.m */; };
+		17BEB88C172047F8008C4B45 /* HPTDataService.m in Sources */ = {isa = PBXBuildFile; fileRef = 17BEB88B172047F8008C4B45 /* HPTDataService.m */; };
+		17BEB89017204F0B008C4B45 /* HPTCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 17BEB88F17204F0B008C4B45 /* HPTCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,11 @@
 		17BEB87F172046CC008C4B45 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		17BEB88617204761008C4B45 /* HPTTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTTableViewController.h; sourceTree = "<group>"; };
 		17BEB88717204761008C4B45 /* HPTTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTTableViewController.m; sourceTree = "<group>"; };
+		17BEB88A172047F8008C4B45 /* HPTDataService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTDataService.h; sourceTree = "<group>"; };
+		17BEB88B172047F8008C4B45 /* HPTDataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTDataService.m; sourceTree = "<group>"; };
+		17BEB88D172049CA008C4B45 /* HPTSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPTSupport.h; path = "Vendor/HPT-Common/HPTSupport.h"; sourceTree = SOURCE_ROOT; };
+		17BEB88E17204F0B008C4B45 /* HPTCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTCell.h; sourceTree = "<group>"; };
+		17BEB88F17204F0B008C4B45 /* HPTCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,10 +88,15 @@
 		17BEB86F172046CC008C4B45 /* HPT Multi Level KVO */ = {
 			isa = PBXGroup;
 			children = (
+				17BEB88E17204F0B008C4B45 /* HPTCell.h */,
+				17BEB88F17204F0B008C4B45 /* HPTCell.m */,
+				17BEB88D172049CA008C4B45 /* HPTSupport.h */,
 				17BEB878172046CC008C4B45 /* HPTAppDelegate.h */,
 				17BEB879172046CC008C4B45 /* HPTAppDelegate.m */,
 				17BEB88617204761008C4B45 /* HPTTableViewController.h */,
 				17BEB88717204761008C4B45 /* HPTTableViewController.m */,
+				17BEB88A172047F8008C4B45 /* HPTDataService.h */,
+				17BEB88B172047F8008C4B45 /* HPTDataService.m */,
 				17BEB870172046CC008C4B45 /* Supporting Files */,
 			);
 			path = "HPT Multi Level KVO";
@@ -173,6 +185,8 @@
 				17BEB876172046CC008C4B45 /* main.m in Sources */,
 				17BEB87A172046CC008C4B45 /* HPTAppDelegate.m in Sources */,
 				17BEB88817204761008C4B45 /* HPTTableViewController.m in Sources */,
+				17BEB88C172047F8008C4B45 /* HPTDataService.m in Sources */,
+				17BEB89017204F0B008C4B45 /* HPTCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
