@@ -28,10 +28,37 @@
                        @"Acer Wildfire Vivid II",
                        @"LG Aria Epic Plus V One",
                        @"HTC Dream Vibrant II Prime Pro",
-                       @"HTC Defy Touch One Z S"
+                       @"HTC Defy Touch One Z S",
+                       @"LG Infuse Vivid",
+                       @"Samsung Xperia Incredible II 3D",
+                       @"Motorola Thunderbolt Slide Pro E",
+                       @"Sony Ericsson Atrix Vibrant Prime Pro",
+                       @"LG Dream Optimus G1 Prime II",
+                       @"LG Bionic Plus V XT",
+                       @"Samsung Mesmerize Epic 3D",
+                       @"Acer Legend Vibrant II E",
+                       @"HTC Legend Vibrant G1 S E",
+                       @"Sony Ericsson Galaxy Incredible V"
                        ];
     
     return array;
+}
+
+- (NSArray *)randomPhoneArray
+{
+    NSMutableArray *array = [[self phoneArray] mutableCopy];
+    for (NSUInteger i = array.count - 1; i > 0; i--) {
+        [array exchangeObjectAtIndex:i withObjectAtIndex:(random() % array.count)];
+    }
+    
+    return array;
+}
+
+- (NSString *)randomPhone
+{
+    NSArray *array = [self phoneArray];
+    
+    return array[rand() % array.count];
 }
 
 + (HPTDataService *)sharedService
@@ -45,7 +72,7 @@
 {
     self = [super init];
     if (self) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:2.0
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                   target:self
                                                 selector:@selector(timerFired:)
                                                 userInfo:nil
@@ -58,12 +85,23 @@
 {
     TRC_ENTRY;
     
-    NSMutableArray *array = [[self phoneArray] mutableCopy];
-    for (NSUInteger i = array.count - 1; i > 0; i--) {
-        [array exchangeObjectAtIndex:i withObjectAtIndex:(random() % array.count)];
+    if (!self.dataArray) {
+        self.dataArray = [NSMutableArray array];
     }
     
-    self.dataArray = array;
+    if (rand() % 3 == 0) {
+//        self.dataArray remo
+    }
+    else {
+        [self addDataObject:[self randomPhone]];
+    }
+}
+
+- (void)addDataObject:(id)object
+{
+    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:self.dataArray.count] forKey:@"dataArray"];
+    [self.dataArray addObject:object];
+    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:self.dataArray.count] forKey:@"dataArray"];
 }
 
 @end

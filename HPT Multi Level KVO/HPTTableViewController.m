@@ -12,7 +12,7 @@
 
 @interface HPTTableViewController ()
 
-@property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 
@@ -59,9 +59,54 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"dataArray"]) {
-        self.dataArray = change[NSKeyValueChangeNewKey];
+        NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
+        NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
+        NSArray *new = change[NSKeyValueChangeNewKey];
+
+        switch (valueChange) {
+            case NSKeyValueChangeInsertion:
+                [self addObject:new.lastObject atIndex:set];
+                break;
+            case NSKeyValueChangeRemoval:
+                ;
+                break;
+            case NSKeyValueChangeReplacement:
+                ;
+                break;
+            case NSKeyValueChangeSetting:
+                self.dataArray = [new mutableCopy];
+                [self.tableView reloadData];
+                break;
+            default:
+                break;
+        }
+        
+        TRC_LOG(@"%@, %d, %@", set, valueChange, new);
+        
         [self.tableView reloadData];
     }
+}
+
+- (void)addObject:(id)object atIndex:(NSIndexSet *)set
+{
+    ASSERT_MAIN_THREAD;
+    
+    [self.dataArray insertObject:object atIndex:set.firstIndex];
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView endUpdates];
+}
+
+- (void)removeObjectAtIndex:(NSIndexSet *)set
+{
+    ASSERT_MAIN_THREAD;
+    
+    [self.dataArray removeObjectAtIndex:set.firstIndex];
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
+                          withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView endUpdates];
 }
 
 #pragma mark - Table view data source
