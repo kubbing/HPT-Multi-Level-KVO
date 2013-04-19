@@ -67,6 +67,7 @@
 
         switch (valueChange) {
             case NSKeyValueChangeInsertion:
+                TRC_LOG(@"%d, %@", set.lastIndex, new.lastObject);
                 [self addObject:new.lastObject atIndex:set];
                 break;
             case NSKeyValueChangeRemoval:
@@ -89,21 +90,23 @@
 
 - (void)addObject:(id)object atIndex:(NSIndexSet *)set
 {
+//    TRC_ENTRY;
     ASSERT_MAIN_THREAD;
     
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationRight];
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
 
 - (void)removeObjectAtIndex:(NSIndexSet *)set
 {
+//    TRC_ENTRY;
     ASSERT_MAIN_THREAD;
     
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationRight];
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
 
