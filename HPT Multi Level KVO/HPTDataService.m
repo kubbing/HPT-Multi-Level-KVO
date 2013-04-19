@@ -72,7 +72,7 @@
 {
     self = [super init];
     if (self) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                   target:self
                                                 selector:@selector(timerFired:)
                                                 userInfo:nil
@@ -89,7 +89,7 @@
         self.dataArray = [NSMutableArray array];
     }
     
-    if (rand() % 4 == 0) {
+    if (rand() % 3 == 0) {
         NSUInteger count = self.dataArray.count;
         if (count) {
             [self removeDataObjectAtIndex:(rand() % count)];

@@ -76,40 +76,36 @@
                 ;
                 break;
             case NSKeyValueChangeSetting:
-                self.dataArray = [[HPTDataService sharedService] valueForKeyPath:keyPath];
+                self.dataArray = [new mutableCopy];
                 [self.tableView reloadData];
                 break;
             default:
                 break;
         }
-        
-        [self.tableView reloadData];
     }
 }
 
 - (void)addObject:(id)object atIndex:(NSUInteger)index
 {
-//    TRC_ENTRY;
     ASSERT_MAIN_THREAD;
     
-    TRC_LOG(@"add: %d", index);
+    [self.dataArray insertObject:object atIndex:index];
     
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
+                          withRowAnimation:UITableViewRowAnimationRight];
     [self.tableView endUpdates];
 }
 
 - (void)removeObjectAtIndex:(NSUInteger)index
 {
-//    TRC_ENTRY;
     ASSERT_MAIN_THREAD;
     
-    TRC_LOG(@"remove: %d", index);
+    [self.dataArray removeObjectAtIndex:index];
     
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
+                          withRowAnimation:UITableViewRowAnimationRight];
     [self.tableView endUpdates];
 }
 
@@ -129,11 +125,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    TRC_ENTRY;
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%d:%d", indexPath.section, indexPath.row];
-    cell.detailTextLabel.text = self.dataArray[indexPath.row];
+    cell.textLabel.text = self.dataArray[indexPath.row];
     
     return cell;
 }
