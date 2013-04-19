@@ -67,11 +67,10 @@
 
         switch (valueChange) {
             case NSKeyValueChangeInsertion:
-                TRC_LOG(@"%d, %@", set.lastIndex, new.lastObject);
-                [self addObject:new.lastObject atIndex:set];
+                [self addObject:new.lastObject atIndex:set.lastIndex];
                 break;
             case NSKeyValueChangeRemoval:
-                [self removeObjectAtIndex:new.lastObject];
+                [self removeObjectAtIndex:set.lastIndex];
                 break;
             case NSKeyValueChangeReplacement:
                 ;
@@ -88,24 +87,28 @@
     }
 }
 
-- (void)addObject:(id)object atIndex:(NSIndexSet *)set
+- (void)addObject:(id)object atIndex:(NSUInteger)index
 {
 //    TRC_ENTRY;
     ASSERT_MAIN_THREAD;
     
+    TRC_LOG(@"add: %d", index);
+    
     [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
 
-- (void)removeObjectAtIndex:(NSIndexSet *)set
+- (void)removeObjectAtIndex:(NSUInteger)index
 {
 //    TRC_ENTRY;
     ASSERT_MAIN_THREAD;
     
+    TRC_LOG(@"remove: %d", index);
+    
     [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
 }
