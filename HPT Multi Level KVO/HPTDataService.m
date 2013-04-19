@@ -72,13 +72,18 @@
 {
     self = [super init];
     if (self) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                   target:self
                                                 selector:@selector(timerFired:)
                                                 userInfo:nil
                                                  repeats:YES];
     }
     return self;
+}
+
+- (void)reset
+{
+    self.dataArray = [NSMutableArray array];
 }
                   
 - (void)timerFired:(id)sender

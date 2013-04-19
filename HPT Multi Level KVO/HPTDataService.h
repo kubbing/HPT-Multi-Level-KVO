@@ -14,4 +14,6 @@
 
 + (HPTDataService *)sharedService;
 
+- (void)reset;
+
 @end

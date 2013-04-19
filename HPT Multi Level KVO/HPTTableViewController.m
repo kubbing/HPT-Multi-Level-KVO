@@ -40,6 +40,10 @@
 
     self.title = @"KVO Demo";
     [self.tableView registerClass:[HPTCell class] forCellReuseIdentifier:@"Cell"];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
+                                                                                           target:self
+                                                                                           action:@selector(resetButtonAction:)];
+    
     
     self.dataArray = [HPTDataService sharedService].dataArray;
     
@@ -52,6 +56,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Actions
+
+- (void)resetButtonAction:(id)sender
+{
+    [[HPTDataService sharedService] reset];
 }
 
 #pragma mark - KVO
