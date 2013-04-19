@@ -83,25 +83,40 @@
                   
 - (void)timerFired:(id)sender
 {
-    TRC_ENTRY;
+    ASSERT_MAIN_THREAD;
     
     if (!self.dataArray) {
         self.dataArray = [NSMutableArray array];
     }
     
-    if (rand() % 3 == 0) {
-//        self.dataArray remo
+    if (rand() % 4 == 0) {
+        NSUInteger count = self.dataArray.count;
+        if (count) {
+            [self removeDataObjectAtIndex:(rand() % count)];
+        }
+        else {
+            return;
+        }
     }
     else {
-        [self addDataObject:[self randomPhone]];
+        NSUInteger count = self.dataArray.count;
+        NSUInteger index = (count == 0)? 0 : rand() % (count+1);
+        [self insertDataObject:[self randomPhone] atIndex:index];
     }
 }
 
-- (void)addDataObject:(id)object
+- (void)insertDataObject:(id)object atIndex:(NSUInteger)index
 {
-    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:self.dataArray.count] forKey:@"dataArray"];
-    [self.dataArray addObject:object];
-    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:self.dataArray.count] forKey:@"dataArray"];
+    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+    [self.dataArray insertObject:object atIndex:index];
+    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+}
+
+- (void)removeDataObjectAtIndex:(NSUInteger)index
+{
+    [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+    [self.dataArray removeObjectAtIndex:index];
+    [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
 }
 
 @end

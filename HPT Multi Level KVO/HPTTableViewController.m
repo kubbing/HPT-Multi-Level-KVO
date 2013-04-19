@@ -58,6 +58,8 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    ASSERT_MAIN_THREAD;
+    
     if ([keyPath isEqualToString:@"dataArray"]) {
         NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
         NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
@@ -68,7 +70,7 @@
                 [self addObject:new.lastObject atIndex:set];
                 break;
             case NSKeyValueChangeRemoval:
-                ;
+                [self removeObjectAtIndex:new.lastObject];
                 break;
             case NSKeyValueChangeReplacement:
                 ;
@@ -80,8 +82,6 @@
             default:
                 break;
         }
-        
-        TRC_LOG(@"%@, %d, %@", set, valueChange, new);
         
         [self.tableView reloadData];
     }
