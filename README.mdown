@@ -4,7 +4,7 @@ KVO Demo for my keynote at [For Mobile 5/13' event](http://srazy.info/for-mobile
 
 # Installation
 
-1. cone
+1. clone
 2. `git submodule init`
 3. …
 4. profit!
@@ -13,16 +13,16 @@ KVO Demo for my keynote at [For Mobile 5/13' event](http://srazy.info/for-mobile
 
 ## Simple KVO
 
-branch stage1
+	$ git checkout stage1
 
 ## Array KVO
 
-branch stage2
+	$ git checkout stage2
 
 ## Advanced KVO
 
-branch stage3
+	$ git checkout stage3
 
 ## VIP Mega Multi-Level Hacked KVO
 
-branch stage4
+	$ git checkout stage4
