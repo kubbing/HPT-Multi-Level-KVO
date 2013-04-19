@@ -1,0 +1,28 @@
+# What
+
+KVO Demo for !(For Mobile 5/13' event)[http://srazy.info/for-mobile/3447]
+
+# Installation
+
+1. cone
+2. `git submodule init`
+3. …
+4. profit!
+
+# 4 demos total
+
+## Simple KVO
+
+branch stage1
+
+## Array KVO
+
+branch stage2
+
+## Advanced KVO
+
+branch stage3
+
+## VIP Mega Multi-Level Hacked KVO
+
+branch stage4
