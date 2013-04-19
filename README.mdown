@@ -1,6 +1,6 @@
 # What
 
-KVO Demo for [For Mobile 5/13' event](http://srazy.info/for-mobile/3447 "Go!")
+KVO Demo for my keynote at [For Mobile 5/13' event](http://srazy.info/for-mobile/3447 "Go!").
 
 # Installation
 
