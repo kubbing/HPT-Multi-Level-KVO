@@ -74,7 +74,7 @@
                 ;
                 break;
             case NSKeyValueChangeSetting:
-                self.dataArray = [new mutableCopy];
+                self.dataArray = [[HPTDataService sharedService] valueForKeyPath:keyPath];
                 [self.tableView reloadData];
                 break;
             default:
@@ -91,7 +91,6 @@
 {
     ASSERT_MAIN_THREAD;
     
-    [self.dataArray insertObject:object atIndex:set.firstIndex];
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
                           withRowAnimation:UITableViewRowAnimationRight];
@@ -102,7 +101,6 @@
 {
     ASSERT_MAIN_THREAD;
     
-    [self.dataArray removeObjectAtIndex:set.firstIndex];
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:set.firstIndex inSection:0]]
                           withRowAnimation:UITableViewRowAnimationRight];
