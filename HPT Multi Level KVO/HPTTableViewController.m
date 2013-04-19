@@ -56,6 +56,10 @@
     [[HPTDataService sharedService] addObserver:self
                                      forKeyPath:@"dataArray"
                                         options:NSKeyValueObservingOptionNew context:NULL];
+    
+    [[HPTDataService sharedService] addObserver:self
+                                     forKeyPath:@"dataArray.@count"
+                                        options:NSKeyValueObservingOptionNew context:NULL];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,7 +81,11 @@
 {
     ASSERT_MAIN_THREAD;
     
+    TRC_LOG(@"path: %@", keyPath);
+    
     if ([keyPath isEqualToString:@"dataArray"]) {
+        TRC_OBJ(change);
+        
         NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
         NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
         NSArray *new = change[NSKeyValueChangeNewKey];
@@ -101,7 +109,7 @@
         }
     }
     else {
-        TRC_OBJ(object);
+        TRC_OBJ(change);
     }
 }
 
