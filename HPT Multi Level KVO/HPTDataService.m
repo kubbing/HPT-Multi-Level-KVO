@@ -102,6 +102,9 @@
     [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:self.dataArray.count] forKey:@"dataArray"];
     [self.dataArray addObject:object];
     [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:self.dataArray.count] forKey:@"dataArray"];
+
+    self.dataArray = [[self randomPhoneArray] mutableCopy];
+
 }
 
 @end
