@@ -95,7 +95,7 @@
 {
     self = [super init];
     if (self) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                   target:self
                                                 selector:@selector(timerFired:)
                                                 userInfo:nil
@@ -163,22 +163,28 @@
         [self insertDataObject:[NSMutableArray array] atIndex:indexPath.section];
     }
     
-//    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
-//              forKey:[@(indexPath.section) description]];
     NSMutableArray *array = self.dataArray[indexPath.section];
     [array insertObject:object atIndex:indexPath.row];
-//    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
-//             forKey:[@(indexPath.section) description]];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"objectInsertedAtIndexPath"
+                                                        object:self
+                                                      userInfo:@{
+     @"object" : object,
+     @"indexPath" : indexPath }];
 }
 
 - (void)removeDataObjectAtIndexPath:(NSIndexPath *)indexPath
 {
-//    [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
-//              forKey:[@(indexPath.section) description]];
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    [indexSet addIndex:indexPath.row];
+    
     NSMutableArray *array = self.dataArray[indexPath.section];
     [array removeObjectAtIndex:indexPath.row];
-//    [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
-//             forKey:[@(indexPath.section) description]];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"objectRemovedAtIndexPath"
+                                                        object:self
+                                                      userInfo:@{
+     @"indexPath" : indexPath }];
     
     if (!array.count) {
         [self removeDataObjectAtIndex:indexPath.section];

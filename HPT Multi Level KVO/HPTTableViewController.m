@@ -36,6 +36,7 @@
 - (void)dealloc
 {
     [[HPTDataService sharedService] removeObserver:self forKeyPath:@"dataArray"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     TRC_EXIT;
 }
@@ -57,9 +58,15 @@
                                      forKeyPath:@"dataArray"
                                         options:NSKeyValueObservingOptionNew context:NULL];
     
-    [[HPTDataService sharedService] addObserver:self
-                                     forKeyPath:@"dataArray.@count"
-                                        options:NSKeyValueObservingOptionNew context:NULL];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(objectInsertedAtIndexPath:)
+                                                 name:@"objectInsertedAtIndexPath"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(objectRemovedAtIndexPath:)
+                                                 name:@"objectRemovedAtIndexPath"
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,18 +82,37 @@
     [[HPTDataService sharedService] reset];
 }
 
+#pragma mark - Notifications
+
+- (void)objectRemovedAtIndexPath:(NSNotification *)notification
+{
+    NSIndexPath *indexPath = notification.userInfo[@"indexPath"];
+    
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView endUpdates];
+}
+
+- (void)objectInsertedAtIndexPath:(NSNotification *)notification
+{
+    NSIndexPath *indexPath = notification.userInfo[@"indexPath"];
+
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView endUpdates];
+}
+
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    ASSERT_MAIN_THREAD;
-    
-    TRC_LOG(@"path: %@", keyPath);
-    
     if ([keyPath isEqualToString:@"dataArray"]) {
-        TRC_OBJ(change);
         
         NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
+        if (set.count > 1) {
+            TRC_ENTRY;
+        }
+        
         NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
         NSArray *new = change[NSKeyValueChangeNewKey];
 
@@ -156,13 +182,11 @@
 {
     // Return the number of rows in the section.
     NSArray *array = self.dataArray[section];
-    return 0;//array.count;
+    return array.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TRC_ENTRY;
-    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
