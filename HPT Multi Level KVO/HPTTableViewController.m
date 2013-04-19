@@ -18,6 +18,12 @@
 
 @implementation HPTTableViewController
 
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    NSUInteger index = [key integerValue];
+    return self.dataArray[index];
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -94,7 +100,12 @@
                 break;
         }
     }
+    else {
+        TRC_OBJ(object);
+    }
 }
+
+#pragma mark - Sections
 
 - (void)addObject:(id)object atIndex:(NSUInteger)index
 {
@@ -103,8 +114,8 @@
     [self.dataArray insertObject:object atIndex:index];
     
     [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView insertSections:[NSIndexSet indexSetWithIndex:index]
+                  withRowAnimation:UITableViewRowAnimationRight];
     [self.tableView endUpdates];
 }
 
@@ -115,8 +126,8 @@
     [self.dataArray removeObjectAtIndex:index];
     
     [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:index]
+                  withRowAnimation:UITableViewRowAnimationRight];
     [self.tableView endUpdates];
 }
 
@@ -125,13 +136,18 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return self.dataArray.count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [[HPTDataService sharedService] randomTitle];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return self.dataArray.count;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -141,7 +157,7 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.textLabel.text = self.dataArray[indexPath.row];
+    cell.textLabel.text = [[HPTDataService sharedService] randomPhone];
     
     return cell;
 }

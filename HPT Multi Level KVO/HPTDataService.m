@@ -13,6 +13,29 @@
     NSTimer *_timer;
 }
 
+- (NSArray *)titleArray
+{
+    return @[@"Apple",
+                        @"Samsung",
+                        @"LG",
+                        @"Nokia",
+                        @"BB",
+                        @"Hippotaps",
+                        @"Motorola",
+                        @"Sony",
+                        @"Ericsson",
+                        @"Panasonic"
+                        ];
+}
+
+- (NSString *)randomTitle
+{
+    NSArray *titleArray = [self titleArray];
+    NSUInteger count = titleArray.count;
+    
+    return titleArray[rand() % count];
+}
+
 - (NSArray *)phoneArray
 {
     NSArray *array = @[@"Sony Ericsson Moment Slide Plus",
@@ -72,7 +95,7 @@
 {
     self = [super init];
     if (self) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                   target:self
                                                 selector:@selector(timerFired:)
                                                 userInfo:nil
@@ -96,32 +119,82 @@
     
     if (rand() % 3 == 0) {
         NSUInteger count = self.dataArray.count;
-        if (count) {
-            [self removeDataObjectAtIndex:(rand() % count)];
-        }
-        else {
+        if (!count) {
+            [self timerFired:sender];
             return;
         }
+        
+        NSUInteger section = rand() % count;
+        NSArray *array = self.dataArray[section];
+        NSUInteger row = rand() % array.count;
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+        [self removeDataObjectAtIndexPath:indexPath];
     }
     else {
         NSUInteger count = self.dataArray.count;
-        NSUInteger index = (count == 0)? 0 : rand() % (count+1);
-        [self insertDataObject:[self randomPhone] atIndex:index];
+        NSUInteger section = rand() % (count+1);
+        NSUInteger row = 0;
+        if (section < count) {
+            NSArray *array = self.dataArray[section];
+            row = rand() % (array.count+1);
+        }
+
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+        [self insertDataObject:[self randomPhone] atIndexPath:indexPath];
     }
 }
 
 - (void)insertDataObject:(id)object atIndex:(NSUInteger)index
 {
-    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
-    [self.dataArray insertObject:object atIndex:index];
-    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+//    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+//              forKey:@"dataArray"];
+//    [self.dataArray insertObject:object atIndex:index];
+//    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+//             forKey:@"dataArray"];
+    
+    NSMutableArray *KVCArray = [self mutableArrayValueForKey:@"dataArray"];
+    [KVCArray insertObject:object atIndex:index];
 }
 
 - (void)removeDataObjectAtIndex:(NSUInteger)index
 {
-    [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
-    [self.dataArray removeObjectAtIndex:index];
-    [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+//    [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+//              forKey:@"dataArray"];
+//    [self.dataArray removeObjectAtIndex:index];
+//    [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+//             forKey:@"dataArray"];
+    
+    NSMutableArray *KVCArray = [self mutableArrayValueForKey:@"dataArray"];
+    [KVCArray removeObjectAtIndex:index];
+}
+
+- (void)insertDataObject:(id)object atIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == self.dataArray.count) {
+        [self insertDataObject:[NSMutableArray array] atIndex:indexPath.section];
+    }
+    
+//    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+//              forKey:[@(indexPath.section) description]];
+    NSMutableArray *array = self.dataArray[indexPath.section];
+    [array insertObject:object atIndex:indexPath.row];
+//    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+//             forKey:[@(indexPath.section) description]];
+}
+
+- (void)removeDataObjectAtIndexPath:(NSIndexPath *)indexPath
+{
+//    [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+//              forKey:[@(indexPath.section) description]];
+    NSMutableArray *array = self.dataArray[indexPath.section];
+    [array removeObjectAtIndex:indexPath.row];
+//    [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+//             forKey:[@(indexPath.section) description]];
+    
+    if (!array.count) {
+        [self removeDataObjectAtIndex:indexPath.section];
+    }
 }
 
 @end

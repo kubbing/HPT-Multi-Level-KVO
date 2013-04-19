@@ -14,6 +14,9 @@
 
 + (HPTDataService *)sharedService;
 
+- (NSString *)randomTitle;
+- (NSString *)randomPhone;
+
 - (void)reset;
 
 @end
