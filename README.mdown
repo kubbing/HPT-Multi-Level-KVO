@@ -23,6 +23,10 @@ KVO Demo for my [For Mobile 5/13' event](http://srazy.info/for-mobile/3447 "Go!"
 
 	$ git checkout stage3
 
-## VIP Mega Multi-Level Hacked KVO
+## Multi-Level Mega Lame KVO
 
 	$ git checkout stage4
+	
+## Multi-Level Mega VIP Clean Hacked KVO
+	
+	$ git checkout stage5
