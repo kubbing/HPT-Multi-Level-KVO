@@ -2,6 +2,8 @@
 
 KVO Demo for my [For Mobile 5/13' event](http://srazy.info/for-mobile/3447 "Go!") keynote.
 
+Slides on [slideshare.net](http://www.slideshare.net/JakubHladk/for-mobile-513 "Go!").
+
 # Installation
 
 1. clone
