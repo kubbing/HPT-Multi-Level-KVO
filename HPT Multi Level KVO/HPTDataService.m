@@ -78,7 +78,8 @@
 {
     TRC_ENTRY;
     
-    self.dataArray = [[self randomPhoneArray] mutableCopy];
+    [self setValue:[[self randomPhoneArray] mutableCopy] forKey:@"dataArray"];
+//    self.dataArray = [[self randomPhoneArray] mutableCopy];
 }
 
 @end
