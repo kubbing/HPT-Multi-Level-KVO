@@ -57,16 +57,6 @@
     [[HPTDataService sharedService] addObserver:self
                                      forKeyPath:@"dataArray"
                                         options:NSKeyValueObservingOptionNew context:NULL];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(objectInsertedAtIndexPath:)
-                                                 name:@"objectInsertedAtIndexPath"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(objectRemovedAtIndexPath:)
-                                                 name:@"objectRemovedAtIndexPath"
-                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,21 +72,15 @@
     [[HPTDataService sharedService] reset];
 }
 
-#pragma mark - Notifications
-
-- (void)objectRemovedAtIndexPath:(NSNotification *)notification
+- (void)objectRemovedAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *indexPath = notification.userInfo[@"indexPath"];
-    
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
     [self.tableView endUpdates];
 }
 
-- (void)objectInsertedAtIndexPath:(NSNotification *)notification
+- (void)objectInsertedAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *indexPath = notification.userInfo[@"indexPath"];
-
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
     [self.tableView endUpdates];
@@ -108,17 +92,27 @@
 {
     if ([keyPath isEqualToString:@"dataArray"]) {
         
-        NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
-        if (set.count > 1) {
-            TRC_ENTRY;
-        }
-        
+        NSIndexSet *set = change[NSKeyValueChangeIndexesKey];        
         NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
-        NSArray *new = change[NSKeyValueChangeNewKey];
-
+        NSArray *newObject = change[NSKeyValueChangeNewKey];
+        
+//        if (valueChange == NSKeyValueChangeSetting ||
+//            (newObject.count == 1 &&
+//            [newObject.lastObject isKindOfClass:[NSArray class]])) {
+//            
+//        }
+//        else {
+//            TRC_ENTRY;
+//        }
+        
+//        TRC_LOG(@"section [%d], change %d, total: %d",
+//                set.lastIndex,
+//                valueChange,
+//                [self.dataArray count]);
+        
         switch (valueChange) {
             case NSKeyValueChangeInsertion:
-                [self addObject:new.lastObject atIndex:set.lastIndex];
+                [self addObject:[NSMutableArray array] atIndex:set.lastIndex];
                 break;
             case NSKeyValueChangeRemoval:
                 [self removeObjectAtIndex:set.lastIndex];
@@ -127,7 +121,8 @@
                 ;
                 break;
             case NSKeyValueChangeSetting:
-                self.dataArray = [new mutableCopy];
+                self.dataArray = [NSMutableArray array];
+                [self removeAllObservers];
                 [self.tableView reloadData];
                 break;
             default:
@@ -135,17 +130,87 @@
         }
     }
     else {
-        TRC_OBJ(change);
+        NSUInteger section = [keyPath integerValue];
+        NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
+        NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
+        NSArray *newObject = change[NSKeyValueChangeNewKey];
+        
+//        TRC_LOG(@"[%d, %d], change %d, total: %d, new: %@",
+//                section,
+//                set.lastIndex,
+//                valueChange,
+//                [self.dataArray[section] count],
+//                newObject.lastObject);
+        
+        switch (valueChange) {
+            case NSKeyValueChangeInsertion:
+            {
+                NSMutableArray *array = self.dataArray[section];
+                [array insertObject:newObject.lastObject atIndex:set.lastIndex];
+                [self objectInsertedAtIndexPath:[NSIndexPath indexPathForRow:set.lastIndex inSection:section]];
+                break;
+            }
+            case NSKeyValueChangeRemoval:
+            {
+                NSMutableArray *array = self.dataArray[section];
+                [array removeObjectAtIndex:set.lastIndex];
+                [self objectRemovedAtIndexPath:[NSIndexPath indexPathForRow:set.lastIndex inSection:section]];
+                break;
+            }
+            case NSKeyValueChangeReplacement:
+                ;
+                break;
+            case NSKeyValueChangeSetting:
+                TRC_ENTRY;
+                break;
+            default:
+                break;
+        }
     }
 }
 
 #pragma mark - Sections
+
+- (void)addObserverForKey:(NSString *)key
+{
+    fprintf(stderr, "add %d ", [key integerValue]);
+    if ([key integerValue] == self.dataArray.count-1) {
+        fprintf(stderr, "done\n");
+        [[HPTDataService sharedService] addObserver:self
+                                         forKeyPath:key
+                                            options:NSKeyValueObservingOptionNew
+                                            context:NULL];
+        return;
+    }
+    fprintf(stderr, "\n");
+}
+
+- (void)removeObserverForKey:(NSString *)key
+{
+    fprintf(stderr, "rem %d ", [key integerValue]);
+    if ([key integerValue] == self.dataArray.count-1) {
+        fprintf(stderr, "done\n");
+        [[HPTDataService sharedService] removeObserver:self
+                                            forKeyPath:key
+                                               context:NULL];
+        return;
+    }
+    fprintf(stderr, "\n");
+}
+
+- (void)removeAllObservers
+{
+    for (NSUInteger i = 0; i < self.dataArray.count; i++) {
+        [self removeObserverForKey:[@(i) description]];
+    }
+}
 
 - (void)addObject:(id)object atIndex:(NSUInteger)index
 {
     ASSERT_MAIN_THREAD;
     
     [self.dataArray insertObject:object atIndex:index];
+    [self addObserverForKey:[@(index) description]];
     
     [self.tableView beginUpdates];
     [self.tableView insertSections:[NSIndexSet indexSetWithIndex:index]
@@ -157,6 +222,7 @@
 {
     ASSERT_MAIN_THREAD;
     
+    [self removeObserverForKey:[@(index) description]];
     [self.dataArray removeObjectAtIndex:index];
     
     [self.tableView beginUpdates];

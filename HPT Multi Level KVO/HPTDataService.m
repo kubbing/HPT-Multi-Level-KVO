@@ -159,36 +159,55 @@
 
 - (void)insertDataObject:(id)object atIndexPath:(NSIndexPath *)indexPath
 {
+//    TRC_LOG(@"insert at: [%d, %d]", indexPath.section, indexPath.row);
+    
     if (indexPath.section == self.dataArray.count) {
         [self insertDataObject:[NSMutableArray array] atIndex:indexPath.section];
     }
     
-    NSMutableArray *array = self.dataArray[indexPath.section];
+    [self willChange:NSKeyValueChangeInsertion
+     valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+              forKey:[@(indexPath.section) description]];
+    
+    NSMutableArray *array = /*[self mutableArrayValueForKey:[@(indexPath.section) description]];*/ self.dataArray[indexPath.section];
     [array insertObject:object atIndex:indexPath.row];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"objectInsertedAtIndexPath"
-                                                        object:self
-                                                      userInfo:@{
-     @"object" : object,
-     @"indexPath" : indexPath }];
+    [self didChange:NSKeyValueChangeInsertion
+    valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+             forKey:[@(indexPath.section) description]];
 }
 
 - (void)removeDataObjectAtIndexPath:(NSIndexPath *)indexPath
 {
+//    TRC_LOG(@"remove at: [%d, %d], total: %d, %@", indexPath.section, indexPath.row, [self.dataArray[indexPath.section] count], self.dataArray[indexPath.section]);
+    
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
     [indexSet addIndex:indexPath.row];
     
-    NSMutableArray *array = self.dataArray[indexPath.section];
+    [self willChange:NSKeyValueChangeRemoval
+     valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+              forKey:[@(indexPath.section) description]];
+    
+    NSMutableArray *array = /*[self mutableArrayValueForKey:[@(indexPath.section) description]];*/ self.dataArray[indexPath.section];
+    if ([array[indexPath.row] isEqualToString:@"Acer Legend Vibrant II E"]) {
+        TRC_ENTRY;
+    }
+    
     [array removeObjectAtIndex:indexPath.row];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"objectRemovedAtIndexPath"
-                                                        object:self
-                                                      userInfo:@{
-     @"indexPath" : indexPath }];
+    [self didChange:NSKeyValueChangeRemoval
+    valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
+             forKey:[@(indexPath.section) description]];
     
     if (!array.count) {
         [self removeDataObjectAtIndex:indexPath.section];
     }
+}
+
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    NSUInteger i = [key integerValue];
+    return self.dataArray[i];
 }
 
 @end
