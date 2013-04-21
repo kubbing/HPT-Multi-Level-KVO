@@ -94,21 +94,6 @@
         
         NSIndexSet *set = change[NSKeyValueChangeIndexesKey];        
         NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
-        NSArray *newObject = change[NSKeyValueChangeNewKey];
-        
-//        if (valueChange == NSKeyValueChangeSetting ||
-//            (newObject.count == 1 &&
-//            [newObject.lastObject isKindOfClass:[NSArray class]])) {
-//            
-//        }
-//        else {
-//            TRC_ENTRY;
-//        }
-        
-//        TRC_LOG(@"section [%d], change %d, total: %d",
-//                set.lastIndex,
-//                valueChange,
-//                [self.dataArray count]);
         
         switch (valueChange) {
             case NSKeyValueChangeInsertion:
@@ -121,8 +106,9 @@
                 ;
                 break;
             case NSKeyValueChangeSetting:
-                self.dataArray = [NSMutableArray array];
                 [self removeAllObservers];
+                self.dataArray = [NSMutableArray array];
+
                 [self.tableView reloadData];
                 break;
             default:
@@ -134,13 +120,6 @@
         NSIndexSet *set = change[NSKeyValueChangeIndexesKey];
         NSKeyValueChange valueChange = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
         NSArray *newObject = change[NSKeyValueChangeNewKey];
-        
-//        TRC_LOG(@"[%d, %d], change %d, total: %d, new: %@",
-//                section,
-//                set.lastIndex,
-//                valueChange,
-//                [self.dataArray[section] count],
-//                newObject.lastObject);
         
         switch (valueChange) {
             case NSKeyValueChangeInsertion:
@@ -161,7 +140,6 @@
                 ;
                 break;
             case NSKeyValueChangeSetting:
-                TRC_ENTRY;
                 break;
             default:
                 break;
@@ -173,29 +151,27 @@
 
 - (void)addObserverForKey:(NSString *)key
 {
-    fprintf(stderr, "add %d ", [key integerValue]);
     if ([key integerValue] == self.dataArray.count-1) {
-        fprintf(stderr, "done\n");
         [[HPTDataService sharedService] addObserver:self
                                          forKeyPath:key
                                             options:NSKeyValueObservingOptionNew
                                             context:NULL];
-        return;
     }
-    fprintf(stderr, "\n");
+}
+
+- (void)removeObserverForLastKey
+{
+    [[HPTDataService sharedService] removeObserver:self
+                                        forKeyPath:[@(self.dataArray.count-1) description]
+                                           context:NULL];
 }
 
 - (void)removeObserverForKey:(NSString *)key
 {
-    fprintf(stderr, "rem %d ", [key integerValue]);
-    if ([key integerValue] == self.dataArray.count-1) {
-        fprintf(stderr, "done\n");
-        [[HPTDataService sharedService] removeObserver:self
-                                            forKeyPath:key
-                                               context:NULL];
-        return;
-    }
-    fprintf(stderr, "\n");
+    [[HPTDataService sharedService] removeObserver:self
+                                        forKeyPath:key
+                                           context:NULL];
+
 }
 
 - (void)removeAllObservers
@@ -222,7 +198,7 @@
 {
     ASSERT_MAIN_THREAD;
     
-    [self removeObserverForKey:[@(index) description]];
+    [self removeObserverForLastKey];
     [self.dataArray removeObjectAtIndex:index];
     
     [self.tableView beginUpdates];

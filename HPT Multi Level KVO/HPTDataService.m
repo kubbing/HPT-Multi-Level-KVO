@@ -158,9 +158,7 @@
 }
 
 - (void)insertDataObject:(id)object atIndexPath:(NSIndexPath *)indexPath
-{
-//    TRC_LOG(@"insert at: [%d, %d]", indexPath.section, indexPath.row);
-    
+{    
     if (indexPath.section == self.dataArray.count) {
         [self insertDataObject:[NSMutableArray array] atIndex:indexPath.section];
     }
@@ -169,7 +167,7 @@
      valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
               forKey:[@(indexPath.section) description]];
     
-    NSMutableArray *array = /*[self mutableArrayValueForKey:[@(indexPath.section) description]];*/ self.dataArray[indexPath.section];
+    NSMutableArray *array = self.dataArray[indexPath.section];
     [array insertObject:object atIndex:indexPath.row];
     
     [self didChange:NSKeyValueChangeInsertion
@@ -188,7 +186,7 @@
      valuesAtIndexes:[NSIndexSet indexSetWithIndex:indexPath.row]
               forKey:[@(indexPath.section) description]];
     
-    NSMutableArray *array = /*[self mutableArrayValueForKey:[@(indexPath.section) description]];*/ self.dataArray[indexPath.section];
+    NSMutableArray *array = self.dataArray[indexPath.section];
     if ([array[indexPath.row] isEqualToString:@"Acer Legend Vibrant II E"]) {
         TRC_ENTRY;
     }
