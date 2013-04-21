@@ -112,16 +112,29 @@
 
 - (void)insertDataObject:(id)object atIndex:(NSUInteger)index
 {
-    [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
-    [self.dataArray insertObject:object atIndex:index];
-    [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+    [self willChange:NSKeyValueChangeInsertion
+     valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+              forKey:@"dataArray"];
+    
+    [self.dataArray insertObject:object
+                         atIndex:index];
+    
+    [self didChange:NSKeyValueChangeInsertion
+    valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+             forKey:@"dataArray"];
 }
 
 - (void)removeDataObjectAtIndex:(NSUInteger)index
 {
-    [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+    [self willChange:NSKeyValueChangeRemoval
+     valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+              forKey:@"dataArray"];
+    
     [self.dataArray removeObjectAtIndex:index];
-    [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:[NSIndexSet indexSetWithIndex:index] forKey:@"dataArray"];
+    
+    [self didChange:NSKeyValueChangeRemoval
+    valuesAtIndexes:[NSIndexSet indexSetWithIndex:index]
+             forKey:@"dataArray"];
 }
 
 @end
