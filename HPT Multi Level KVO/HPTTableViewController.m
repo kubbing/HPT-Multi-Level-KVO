@@ -41,8 +41,6 @@
     self.title = @"KVO Demo";
     [self.tableView registerClass:[HPTCell class] forCellReuseIdentifier:@"Cell"];
     
-    self.dataArray = [HPTDataService sharedService].dataArray;
-    
     [[HPTDataService sharedService] addObserver:self
                                      forKeyPath:@"dataArray"
                                         options:NSKeyValueObservingOptionNew context:NULL];
