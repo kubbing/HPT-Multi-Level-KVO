@@ -151,12 +151,10 @@
 
 - (void)addObserverForKey:(NSString *)key
 {
-    if ([key integerValue] == self.dataArray.count-1) {
-        [[HPTDataService sharedService] addObserver:self
-                                         forKeyPath:key
-                                            options:NSKeyValueObservingOptionNew
-                                            context:NULL];
-    }
+    [[HPTDataService sharedService] addObserver:self
+                                     forKeyPath:key
+                                        options:NSKeyValueObservingOptionNew
+                                        context:NULL];
 }
 
 - (void)removeObserverForLastKey
@@ -186,7 +184,7 @@
     ASSERT_MAIN_THREAD;
     
     [self.dataArray insertObject:object atIndex:index];
-    [self addObserverForKey:[@(index) description]];
+    [self addObserverForKey:[@(self.dataArray.count-1) description]];
     
     [self.tableView beginUpdates];
     [self.tableView insertSections:[NSIndexSet indexSetWithIndex:index]
