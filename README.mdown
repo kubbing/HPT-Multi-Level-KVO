@@ -9,7 +9,7 @@ KVO Demo for my [For Mobile 5/13' event](http://srazy.info/for-mobile/3447 "Go!"
 3. …
 4. profit!
 
-# 4 demos total
+# 5 demos total
 
 ## Simple KVO
 
