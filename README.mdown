@@ -1,6 +1,6 @@
 # Licence
 
-Licensed under the ["THE BEER-WARE LICENSE"](http://en.wikipedia.org/wiki/Beerware).
+Licensed under the ["THE BEER-WARE LICENSE"](http://en.wikipedia.org/wiki/Beerware "Go!").
 
 # What
 
