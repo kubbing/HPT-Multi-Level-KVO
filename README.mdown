@@ -1,3 +1,7 @@
+# Licence
+
+Licensed under the ["THE BEER-WARE LICENSE"](http://en.wikipedia.org/wiki/Beerware).
+
 # What
 
 KVO Demo for my [For Mobile 5/13' event](http://srazy.info/for-mobile/3447 "Go!") keynote.
